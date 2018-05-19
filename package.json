@@ -1,0 +1,25 @@
+{
+  "name": "accept-json",
+  "version": "0.0.1",
+  "description": "Simple client for HTTP JSON APIs",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/teifip/accept-json.git"
+  },
+  "keywords": [
+    "API",
+    "client",
+    "JSON",
+    "HTTP"
+  ],
+  "engines": {
+    "node": ">=7.0.0"
+  },
+  "bugs": {
+    "url": "https://github.com/teifip/accept-json/issues"
+  },
+  "homepage": "https://github.com/teifip/accept-json#readme",
+  "author": "Paolo Fiorini <teifip@gmail.com>",
+  "license": "MIT"
+}
