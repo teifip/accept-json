@@ -73,7 +73,7 @@ const apiClient = require('accept-json');
 const client = apiClient(baseUrl, options);
 ```
 
-`baseUrl` must be a valid URL string, starting with either `http://` or `https://`.
+`baseUrl` must be a valid URL string, starting with `http://` or `https://`.
 
 If present, `options` must be an object with following properties:
 
@@ -91,22 +91,22 @@ Once the API client has been instantiated, requests are made through the followi
 
 **client.post(path[, options][, callback])**
 
-Initiates a POST request to the server. `path`specifies the request path relative to the `baseUrl` configured for the client. Must be a string starting with `/`.
+Initiates a POST request to the server. `path`specifies the request path (relative to the `baseUrl` configured for the client). Must be a string starting with `/`.
 
-If present, `callback` must be a function that expects `(error, result)` as input parameters. If `callback` is not present, then `client.post()` returns a promise to resolve `result` or to catch `error`.
+If present, `callback` must be a function that expects `(error, result)` as input parameters. Otherwise, if `callback` is not present, then `client.post()` returns a promise to resolve `result` or to catch `error`.
 
 If present, `options` must be an object with the following properties:
 
 | Property        | Description |
 |:----------------|:------------|
 | `query`         | OPTIONAL - Object; if present, a query string is generated with the specified keys and values |
-| `json`          | OPTIONAL - Object; if present, a JSON body is generated and the `content-type` header is set to `application/json` |
-| `form`          | OPTIONAL - Object; if present, a URL-encoded body is generated and the `content-type` header is set to `application/x-www-form-urlencoded`; `form` is disregarded if `json` is present |
-| `text`          | OPTIONAL - String; if present, the value is used as request body and the `content-type` header is set to `text/plain`; `text` is disregarded if `json` or `form` is present |
-| `token`         | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2); takes precedence over the `token` specified when the client was instantiated (if any) |
-| `user`          | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified, and the two values take precedence over the `user` / `password` specified when the client was instantiated (if any) |
-| `password`      | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified, and the two values take precedence over the `user` / `password` specified when the client was instantiated (if any) |
-| `headers`       | OPTIONAL - Object; headers to be added to the request; values specified here take precedence over the corresponding values specified when the client was instantiated (if any); there is no need to specify the `accept` header or the `content-type` header since they are automatically generated
+| `json`          | OPTIONAL - Object; if present, the `json` object is serialized into a JSON body and the `content-type` header is set to `application/json` |
+| `form`          | OPTIONAL - Object; if present, the `form` object is serialized into a URL-encoded body and the `content-type` header is set to `application/x-www-form-urlencoded`; `form` is disregarded if `json` is present |
+| `text`          | OPTIONAL - String; if present, the `text` string is used as request body and the `content-type` header is set to `text/plain`; `text` is disregarded if `json` or `form` is present |
+| `token`         | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2); takes precedence over the `token` optionally specified when instantiating the client |
+| `user`          | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified, and the two values take precedence over the `user` / `password` optionally specified when instantiating the client |
+| `password`      | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified, and the two values take precedence over the `user` / `password` optionally specified when instantiating the client |
+| `headers`       | OPTIONAL - Object; headers to be added to the request; values specified here take precedence over the corresponding values optionally specified when instantiating the client; there is no need to specify the `accept` header or the `content-type` header since they are automatically generated
 
 The `result` value is an object defined as follows:
 
@@ -115,7 +115,7 @@ The `result` value is an object defined as follows:
 | `code`        | Integer number; response status code |
 | `message`     | String; response status message |
 | `header`      | Object; response headers |
-| `body`        | Object (normal) or string (fallback); response body; returned as object whenever the response body is parsable with `JSON.parse()` or as string otherwise. This is intended to be robust to misbehaving servers that return plain text responses rather than JSON responses upon certain error conditions |
+| `body`        | Response body returned as object if the body received from the server is parsable with `JSON.parse()` or as string otherwise; this is intended to be robust to misbehaving servers that send plain text responses rather than JSON responses upon certain error conditions |
 | `redirection` | String; only present in case the server replied with a redirection; derived from the `location` header by stripping away the search string and the request `path`. The `redirection` value can be used as `baseUrl` to instantiate a new client pointing to the new location |
 
 **client.get(path[, options][, callback])**
