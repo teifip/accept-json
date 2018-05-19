@@ -1,6 +1,6 @@
 # accept-json
 
-Basic client for HTTP JSON APIs, not a replacement for the very popular [request](https://github.com/request/request) or [got](https://github.com/sindresorhus/got) packages.
+Basic client for HTTP JSON APIs, not a replacement for the very popular [request](https://github.com/request/request) and [got](https://github.com/sindresorhus/got) packages.
 
 The client can send request data as query parameters, JSON body, URL encoded body or plain text body, and expects responses to be returned as non compressed JSON body.
 
