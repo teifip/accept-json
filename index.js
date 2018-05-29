@@ -3,7 +3,6 @@ const https = require('https');
 const qs = require('querystring');
 const { URL } = require('url');
 
-
 module.exports = function(baseUrl, options = {}) {
   return new ApiClient(new URL(baseUrl), options);
 }
@@ -87,6 +86,9 @@ function makeRequest(method, path = '/', rest) {
   let options = {};
   let callback = null;
 
+  if (rest.length > 0 && rest[rest.length - 1] === undefined) {
+    rest.pop();
+  }
   if (rest.length > 0 && rest[0].constructor === Object) {
     options = rest.shift();
   }
