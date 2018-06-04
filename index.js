@@ -32,7 +32,7 @@ function ApiClient(baseUrl, options) {
   if (options.token) {
     this.headers.authorization = `Bearer ${options.token}`;
   } else if (options.user && options.password) {
-    this.base.auth = `${options.user}:${options.password}`;
+    this.endpoint.auth = `${options.user}:${options.password}`;
   }
 
   if (options.keepAliveMsecs) {
