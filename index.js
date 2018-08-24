@@ -31,6 +31,8 @@ function ApiClient(baseUrl, options) {
 
   if (options.token) {
     this.headers.authorization = `Bearer ${options.token}`;
+  } else if (options.basic) {
+    this.headers.authorization = `Basic ${options.basic}`;
   } else if (options.user && options.password) {
     this.endpoint.auth = `${options.user}:${options.password}`;
   }
@@ -126,6 +128,8 @@ function makeRequest(method, path = '/', rest) {
 
   if (options.token) {
     reqOptions.headers.authorization = `Bearer ${options.token}`;
+  } else if (options.basic) {
+    reqOptions.headers.authorization = `Basic ${options.basic}`;
   } else if (options.user && options.password) {
     reqOptions.auth = `${options.user}:${options.password}`;
   }

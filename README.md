@@ -80,6 +80,7 @@ If present, `options` must be an object with following properties:
 | Property        | Description |
 |:----------------|:------------|
 | `token`         | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2) |
+| `basic`         | OPTIONAL - String; base64 encoding of `<user>:<password>` (HTTP Basic authentication); alternatively, user name and password can be specified as separate strings (see next) |
 | `user`          | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified |
 | `password`      | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified
 | `timeout`       | OPTIONAL - Integer number; request timeout in milliseconds |
@@ -104,6 +105,7 @@ If present, `options` must be an object with the following properties:
 | `form`          | OPTIONAL - Object; if present, the `form` object is serialized into a URL-encoded body and the `content-type` header is set to `application/x-www-form-urlencoded`; `form` is disregarded if `json` is present |
 | `text`          | OPTIONAL - String; if present, the `text` string is used as request body and the `content-type` header is set to `text/plain`; `text` is disregarded if `json` or `form` is present |
 | `token`         | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2); takes precedence over the `token` optionally specified when instantiating the client |
+| `basic`         | OPTIONAL - String; base64 encoding of `<user>:<password>` (HTTP Basic authentication); takes precedence over the `basic` value optionally specified when instantiating the client; alternatively, user name and password can be specified as separate strings (see next) |
 | `user`          | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified, and the two values take precedence over the `user` / `password` optionally specified when instantiating the client |
 | `password`      | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified, and the two values take precedence over the `user` / `password` optionally specified when instantiating the client |
 | `headers`       | OPTIONAL - Object; headers to be added to the request; values specified here take precedence over the corresponding values optionally specified when instantiating the client; there is no need to specify the `accept` header or the `content-type` header since they are automatically generated
