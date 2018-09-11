@@ -37,6 +37,14 @@ function ApiClient(baseUrl, options) {
     this.endpoint.auth = `${options.user}:${options.password}`;
   }
 
+  if (options.rejectUnauthorized !== undefined) {
+    this.endpoint.rejectUnauthorized = options.rejectUnauthorized;
+  }
+
+  if (options.ca !== undefined) {
+    this.endpoint.ca = options.ca;
+  }
+
   if (options.keepAliveMsecs) {
     this.endpoint.agent = new this.protocol.Agent({
       keepAlive: true,

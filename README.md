@@ -77,14 +77,16 @@ const client = apiClient(baseUrl, options);
 
 If present, `options` must be an object with following properties:
 
-| Property        | Description |
-|:----------------|:------------|
-| `token`         | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2) |
-| `basic`         | OPTIONAL - String; base64 encoding of `<user>:<password>` (HTTP Basic authentication); alternatively, user name and password can be specified as separate strings (see next) |
-| `user`          | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified |
-| `password`      | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified
-| `timeout`       | OPTIONAL - Integer number; request timeout in milliseconds |
-| `headers`       | OPTIONAL - Object; headers to be added to the request; there is no need to specify the `accept` header or the `content-type` header since they are automatically generated
+| Property             | Description |
+|:---------------------|:------------|
+| `token`              | OPTIONAL - String; token for HTTP Bearer authentication (OAuth2) |
+| `basic`              | OPTIONAL - String; base64 encoding of `<user>:<password>` (HTTP Basic authentication); alternatively, user name and password can be specified as separate strings (see next) |
+| `user`               | OPTIONAL - String; user name for HTTP Basic authentication; takes effect only if also `password` is specified |
+| `password`           | OPTIONAL - String; password for HTTP Basic authentication; takes effect only if also `user` is specified |
+| `timeout`            | OPTIONAL - Integer number; request timeout in milliseconds |
+| `headers`            | OPTIONAL - Object; headers to be added to the request; there is no need to specify the `accept` header or the `content-type` header since they are automatically generated |
+| `rejectUnauthorized` | OPTIONAL - Boolean; default to `true`; see [tls.connect()](https://nodejs.org/dist/latest-v8.x/docs/api/tls.html#tls_tls_connect_options_callback) documentation for information |
+| `ca` | OPTIONAL - String, array of strings, buffer, or array of buffers; default to the list of well-known CAs curated by Mozilla; see [tls.createSecureContext()](https://nodejs.org/dist/latest-v8.x/docs/api/tls.html#tls_tls_createsecurecontext_options) for information |
 | `keepAliveMsec` | OPTIONAL - Integer number; when present, creates a persistent connection to the server with the specified keep alive in milliseconds |
 | `maxSockets`    | OPTIONAL - Integer number; maximum number of concurrent sockets to the server; takes effect only when `keepAliveMsec` is specified and has `1` (single socket) as default value |
 
