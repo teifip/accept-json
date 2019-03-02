@@ -25,9 +25,9 @@ function ApiClient(baseUrl, options) {
     path: baseUrl.pathname
   };
 
-  this.headers = Object.assign({'accept': 'application/json'}, options.headers);
+  if (options.timeout) this.endpoint.timeout = options.timeout;
 
-  this.timeout = options.timeout;
+  this.headers = Object.assign({'accept': 'application/json'}, options.headers);
 
   if (options.token) {
     this.headers.authorization = `Bearer ${options.token}`;
@@ -186,11 +186,9 @@ function request(reqOptions, reqBody, path, ...callbacks) {
     });
   });
 
-  if (this.timeout) {
-    req.setTimeout(this.timeout, () => req.abort());
-  }
-
   req.on('error', error => callbacks[callbacks.length - 1](error));
+
+  req.on('timeout', () => req.abort());
 
   req.end(reqBody);
 }
