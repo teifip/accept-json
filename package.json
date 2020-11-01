@@ -1,6 +1,6 @@
 {
   "name": "accept-json",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Simple client for HTTP JSON APIs",
   "main": "index.js",
   "repository": {

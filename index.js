@@ -161,7 +161,7 @@ function request(reqOptions, reqBody, path, ...callbacks) {
 
     res.on('end', () => {
       try {
-        resBody = JSON.parse(resBody);
+        resBody = JSON.parse(resBody.trim());
       } catch (error) {}
 
       let response = {
