@@ -170,7 +170,7 @@ function request(reqUrl, reqOptions, reqBody, ...callbacks) {
         message: res.statusMessage,
         headers: res.headers,
         body: resBody || {},
-        latency: delta / 1000000n
+        latency: Number(delta / 1000000n)
       };
 
       if (callbacks.length === 1) {
