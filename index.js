@@ -156,6 +156,7 @@ function request(reqUrl, reqOptions, reqBody, ...callbacks) {
     res.on('data', data => resBody += data);
 
     res.on('end', () => {
+      const delta = process.hrtime.bigint() - start;
       try {
         resBody = JSON.parse(resBody.trim());
       } catch (error) {}
@@ -164,7 +165,8 @@ function request(reqUrl, reqOptions, reqBody, ...callbacks) {
         code: res.statusCode,
         message: res.statusMessage,
         headers: res.headers,
-        body: resBody || {}
+        body: resBody || {},
+        latency: delta / 1000000n
       };
 
       if (callbacks.length === 1) {
@@ -179,5 +181,6 @@ function request(reqUrl, reqOptions, reqBody, ...callbacks) {
 
   req.on('timeout', () => req.abort());
 
+  const start = process.hrtime.bigint();
   req.end(reqBody);
 }

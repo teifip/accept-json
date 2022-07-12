@@ -120,6 +120,7 @@ The `result` value is an object defined as follows:
 | `message`     | String; response status message |
 | `header`      | Object; response headers |
 | `body`        | Response body returned as object if the body received from the server is parsable with `JSON.parse()` or as string otherwise; this is intended to be robust to misbehaving servers that send plain text responses rather than JSON responses upon certain error conditions |
+| `latency`     | Integer number; time interval in milliseconds from the beginning of the request to the end of the response |
 
 **client.get(path[, options][, callback])**
 
