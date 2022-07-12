@@ -12,6 +12,10 @@ module.exports = (baseUrl, options = {}) => {
     throw new TypeError('Invalid base URL');
   }
 
+  if (baseUrl.endsWith('/')) {
+    baseUrl = baseUrl.slice(0, -1);
+  }
+
   return new ApiClient(baseUrl, options);
 }
 
@@ -107,7 +111,7 @@ function makeRequest(method, path = '/', rest) {
     throw new TypeError('Invalid arguments');
   }
 
-  const reqUrl = new URL(path, this.baseUrl);
+  const reqUrl = new URL(this.baseUrl + path);
   const reqOptions = Object.assign({ method: method }, this.options);
 
   if (options.query) {
