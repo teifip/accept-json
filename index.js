@@ -1,52 +1,50 @@
 const http = require('http');
 const https = require('https');
-const qs = require('querystring');
-const { URL } = require('url');
 
-module.exports = function(baseUrl, options = {}) {
-  return new ApiClient(new URL(baseUrl), options);
+module.exports = (baseUrl, options = {}) => {
+  const url = new URL(baseUrl);
+
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') {
+    throw new TypeError('Invalid base URL');
+  }
+
+  if (url.search || url.hash) {
+    throw new TypeError('Invalid base URL');
+  }
+
+  return new ApiClient(baseUrl, options);
 }
 
 function ApiClient(baseUrl, options) {
-  if (baseUrl.protocol !== 'http:' && baseUrl.protocol !== 'https:') {
-    throw new TypeError('Invalid URL');
-  }
+  this.baseUrl = baseUrl;
 
-  this.protocol = baseUrl.protocol === 'http:' ? http : https;
-
-  if (baseUrl.pathname !== '/' && baseUrl.pathname.endsWith('/')) {
-    baseUrl.pathname = baseUrl.pathname.slice(0, -1);
-  }
-
-  this.endpoint = {
-    protocol: baseUrl.protocol,
-    hostname: baseUrl.hostname,
-    port: baseUrl.port,
-    path: baseUrl.pathname
+  this.options = {
+    headers: Object.assign({'accept': 'application/json'}, options.headers)
   };
 
-  if (options.timeout) this.endpoint.timeout = options.timeout;
-
-  this.headers = Object.assign({'accept': 'application/json'}, options.headers);
+  if (options.timeout) {
+    this.options.timeout = options.timeout;
+  }
 
   if (options.token) {
-    this.headers.authorization = `Bearer ${options.token}`;
+    this.options.headers.authorization = `Bearer ${options.token}`;
   } else if (options.basic) {
-    this.headers.authorization = `Basic ${options.basic}`;
+    this.options.headers.authorization = `Basic ${options.basic}`;
   } else if (options.user && options.password) {
-    this.endpoint.auth = `${options.user}:${options.password}`;
+    this.options.auth = `${options.user}:${options.password}`;
   }
 
   if (options.rejectUnauthorized !== undefined) {
-    this.endpoint.rejectUnauthorized = options.rejectUnauthorized;
+    this.options.rejectUnauthorized = options.rejectUnauthorized;
   }
 
   if (options.ca !== undefined) {
-    this.endpoint.ca = options.ca;
+    this.options.ca = options.ca;
   }
 
   if (options.keepAliveMsecs) {
-    this.endpoint.agent = new this.protocol.Agent({
+    const protocol = baseUrl.startsWith('http:') ? http : https;
+    this.options.agent = new protocol.Agent({
       keepAlive: true,
       keepAliveMsecs: options.keepAliveMsecs,
       maxSockets: options.maxSockets || 1
@@ -109,17 +107,13 @@ function makeRequest(method, path = '/', rest) {
     throw new TypeError('Invalid arguments');
   }
 
-  let reqOptions = Object.assign({ method: method }, this.endpoint);
-
-  if (path !== '/') {
-    reqOptions.path += (reqOptions.path === '/' ? path.slice(1) : path);
-  }
+  const reqUrl = new URL(path, this.baseUrl);
+  const reqOptions = Object.assign({ method: method }, this.options);
 
   if (options.query) {
-    reqOptions.path += `?${qs.stringify(options.query)}`;
+    const keys = Object.keys(options.query);
+    keys.forEach(key => reqUrl.searchParams.append(key, options.query[key]));
   }
-
-  reqOptions.headers = Object.assign({}, this.headers);
 
   let reqBody = '';
 
@@ -128,7 +122,7 @@ function makeRequest(method, path = '/', rest) {
     reqBody = JSON.stringify(options.json);
   } else if (options.form) {
     reqOptions.headers['content-type'] = 'application/x-www-form-urlencoded';
-    reqBody = qs.stringify(options.form);
+    reqBody = (new URLSearchParams(options.form)).toString();
   } else if (options.text) {
     reqOptions.headers['content-type'] = 'text/plain';
     reqBody = options.text;
@@ -145,16 +139,18 @@ function makeRequest(method, path = '/', rest) {
   Object.assign(reqOptions.headers, options.headers);
 
   if (callback) {
-    request.call(this, reqOptions, reqBody, path, callback);
+    request.call(this, reqUrl, reqOptions, reqBody, callback);
   } else {
     return new Promise((resolve, reject) => {
-      request.call(this, reqOptions, reqBody, path, resolve, reject);
+      request.call(this, reqUrl, reqOptions, reqBody, resolve, reject);
     });
   }
 }
 
-function request(reqOptions, reqBody, path, ...callbacks) {
-  let req = this.protocol.request(reqOptions, (res) => {
+function request(reqUrl, reqOptions, reqBody, ...callbacks) {
+  const protocol =  reqUrl.protocol === 'http:' ? http : https;
+
+  const req = protocol.request(reqUrl, reqOptions, (res) => {
     let resBody = '';
 
     res.on('data', data => resBody += data);
@@ -170,13 +166,6 @@ function request(reqOptions, reqBody, path, ...callbacks) {
         headers: res.headers,
         body: resBody || {}
       };
-
-      if (res.headers.location) {
-        let loc = new URL(res.headers.location);
-        loc.search = '';
-        loc.pathname = loc.pathname.slice(0, loc.pathname.indexOf(path));
-        response.redirection = loc.toString();
-      }
 
       if (callbacks.length === 1) {
         callbacks[0](null, response);

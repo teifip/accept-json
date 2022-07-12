@@ -120,7 +120,6 @@ The `result` value is an object defined as follows:
 | `message`     | String; response status message |
 | `header`      | Object; response headers |
 | `body`        | Response body returned as object if the body received from the server is parsable with `JSON.parse()` or as string otherwise; this is intended to be robust to misbehaving servers that send plain text responses rather than JSON responses upon certain error conditions |
-| `redirection` | String; only present in case the server replied with a redirection; derived from the `location` header by stripping away the search string and the request `path`. The `redirection` value can be used as `baseUrl` to instantiate a new client pointing to the new location |
 
 **client.get(path[, options][, callback])**
 
